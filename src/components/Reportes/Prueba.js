@@ -82,15 +82,19 @@ export default function SignUp() {
             axios
                 .post("http://localhost:3000/api/agregarFormulario", formulario)
                 .then((res) => {
-                    localStorage.setItem('fecha', res.data.formulario.fechaDeDeclamacion)
-                    Swal.fire({
-                        icon: "success",
-                        title: "Exito",
-                        text: "Te has registrado exitosamente.",
-                    });
-                    parent()
+                    setTimeout(function () {
+                        localStorage.setItem('fecha', res.data.formulario.fechaDeDeclamacion)
+                        Swal.fire({
+                            icon: "success",
+                            title: "Exito",
+                            text: "Te has registrado exitosamente.",
+                        });
+                        parent()
+                        navigate("/fecha")
+                    },1500)
+                    
                 })
-                .then(navigate("/fecha"))
+                .then()
                 .catch((error) => {
                     console.log(error);
                     Swal.fire({
@@ -143,7 +147,7 @@ export default function SignUp() {
                             <Grid item xs={12} sm={6}>
                                 <TextField
                                     autoComplete="given-name"
-                                    name="nombre"
+                                    name="nombres"
                                     required
                                     fullWidth
                                     id="firstName"

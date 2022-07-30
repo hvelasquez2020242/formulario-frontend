@@ -1,4 +1,4 @@
-import React, { useState } from "react"; import { styled } from '@mui/material/styles';
+import React, { useEffect, useState } from "react"; import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -18,8 +18,13 @@ const bull = (
   </Box>
 );
 
-export const Formulario = () => {
 
+
+export const Formulario = () => {
+  const [fecha, setFecha] = useState('')
+  useEffect(() => {
+    setFecha(localStorage.getItem('fecha'))
+  },)
   return (
     <>
       <Box
@@ -44,7 +49,7 @@ export const Formulario = () => {
                 Poesia
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Tu dia de declamacion es {localStorage.getItem('fecha')}
+                Tu dia de declamacion es {fecha}
               </Typography>
             </CardContent>
 
