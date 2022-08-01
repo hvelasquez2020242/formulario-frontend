@@ -5,6 +5,7 @@ import {Home} from '../Home/Home'
 import Reporte from '../Reporte/Reporte'
 import { Reportes } from '../Reportes/Reportes'
 import { ReportesFecha } from '../Reportes/ReporteFecha'
+import { ReportesEdad } from '../Reportes/ReporteEdad'
 import Checkout from '../Reportes/Prueba'
 import {
     Routes,
@@ -25,6 +26,7 @@ export const Main = () => {
                 <Route path='/Reportes/:carrera' element={<Reportes/>}/>
                 <Route path='/ReporteFecha' element={<ReportesFecha/>}/>
                 <Route path='/formulario' element={<Checkout/>}/>
+                <Route path='/ReporteEdad' element={<ReportesEdad/>}/>
 
             </Routes>
 

@@ -16,11 +16,14 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Modal from '@mui/material/Modal';
 import ButtonGroup from '@mui/material/ButtonGroup';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import axios from "axios";
 import {
     TextField
 } from "@mui/material";
-import { useState } from "react"; 
-
+import { useState, useEffect } from "react";
 import Cloud from '@mui/icons-material/Cloud';
 import Container from '@mui/material/Container';
 const style = {
@@ -35,20 +38,48 @@ const style = {
     p: 4,
 };
 export const Home = () => {
+    const [currency, setCurrency] = useState('');
     const [open, setOpen] = React.useState(false);
-    const [carrera, setCarrera] = useState('')
+    const [carrera, setCarrera] = useState([]);
+    const [generoPoesia, setGeneroPoesia] = useState('')
+    const [buscar, setBuscar] = useState('')
+    useEffect(() => {
+        obtenerDatos()
+    }, [])
+
+    const handleChange3 = (event) => {
+        setBuscar(event.target.value);
+    };
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         setCarrera(data.get('carrera'))
-      };
-    
+    };
+    const handleChange2 = (event) => {
+        console.log(event.target.value);
+        setGeneroPoesia(event.target.value)
+    };
     const handleOpen = () => {
         setOpen(true);
     };
     const handleClose = () => {
         setOpen(false);
     };
+    function obtenerDatos() {
+        axios
+            .get("http://localhost:3000/api/obtenerCarreras")
+            .then((res) => {
+
+                console.log(res.data.carreras);
+                setCarrera(res.data.carreras)
+            })
+            .then()
+            .catch((error) => {
+                console.log(error.response.data.mensaje);
+
+            });
+
+    }
     return (
         <>
             <Grid container spacing={{ xs: 1, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}  >
@@ -73,7 +104,7 @@ export const Home = () => {
                             </Typography>
                         </CardContent>
                         <CardActions sx={{ marginBottom: '10px' }}>
-                            <Button size="small" component={Link} to={"/Reporte/" + 'lirica'}>Ver reportes</Button>
+                            <Button size="small" component={Link} to={"/Reporte/" + 'Lirica'}>Ver reportes</Button>
                         </CardActions>
                     </Card>
                 </Grid>
@@ -148,6 +179,14 @@ export const Home = () => {
                         </ListItemIcon>
                         <ListItemText>fecha de declamacion</ListItemText>
                     </MenuItem>
+                    <Divider />
+
+                    <MenuItem component={Link} to={"/ReporteEdad"}>
+                        <ListItemIcon>
+                            <Cloud fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText>fecha de nacimiento</ListItemText>
+                    </MenuItem>
                 </MenuList>
             </Paper>
             <Box
@@ -177,46 +216,64 @@ export const Home = () => {
                     </Container>
                 </Box>
             </Box>
-            <Modal 
+            <Modal
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style} >
-                    <Grid  component="form" onSubmit={handleSubmit}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Ingrese la carrera que desea buscar
-                    </Typography>
-                    <TextField sx={{ marginTop: '20px' }} fullWidth id="outlined-basic" label="carrera" name='carrera' variant="outlined"  onChange={(event) => setCarrera(event.target.value)}/>
+                    <Grid component="form" onSubmit={handleSubmit}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            Ingrese la carrera que desea buscar
+                        </Typography>
+                        <TextField sx={{ marginTop: '20px' }} fullWidth id="outlined-basic" label="carrera" name='carrera' variant="outlined" onChange={(event) => setCarrera(event.target.value)} />
 
-                    <ButtonGroup variant="outlined" aria-label="outlined button group">
-                        <Button type="submit" component={Link} to={"/Reportes/" + carrera}
-                        >Buscar</Button>
-                        <Button>Cancelar</Button>
-                    </ButtonGroup>
+                        <ButtonGroup variant="outlined" aria-label="outlined button group">
+                            <Button type="submit" component={Link} to={"/Reportes/" + carrera}
+                            >Buscar</Button>
+                            <Button>Cancelar</Button>
+                        </ButtonGroup>
                     </Grid>
                 </Box>
             </Modal>
 
-            <Modal 
+            <Modal
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style} >
-                    <Grid  component="form" onSubmit={handleSubmit}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Ingrese la carrera que desea buscar
-                    </Typography>
-                    <TextField sx={{ marginTop: '20px' }} fullWidth id="outlined-basic" label="carrera" name='carrera' variant="outlined"  onChange={(event) => setCarrera(event.target.value)}/>
+                    <Grid component="form" onSubmit={handleSubmit}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            Seleccione  la carrera
+                        </Typography>
+                        <FormControl fullWidth sx={{ height: '100px' }}>
 
-                    <ButtonGroup variant="outlined" aria-label="outlined button group">
-                        <Button type="submit" component={Link} to={"/Reportes/" + carrera}
-                        >Buscar</Button>
-                        <Button>Cancelar</Button>
-                    </ButtonGroup>
+                            <InputLabel id="demo-simple-select-label">Carrera</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                label="Genero"
+                                value={buscar}
+                                onChange={handleChange3}
+                            >{carrera.map((carr, index) => {
+                                return (
+                                    <MenuItem key={index} value={carr.nombre} label={buscar}>
+                                        {carr.nombre}
+                                    </MenuItem>
+                                )
+                            })
+
+                                }
+                            </Select>
+                        </FormControl>
+                        <ButtonGroup variant="outlined" aria-label="outlined button group">
+                            <Button type="submit" component={Link} to={"/Reportes/" + buscar}
+                            >Buscar</Button>
+                            <Button>Cancelar</Button>
+                        </ButtonGroup>
                     </Grid>
                 </Box>
             </Modal>
